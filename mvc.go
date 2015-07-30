@@ -136,7 +136,6 @@ func showCoreValue(index int, use_title bool) {
 	}
 	fmt.Fprintln(stdout, Green+coreValues[index].title+End)
 	fmt.Fprintln(stdout, Yellow+coreValues[index].what+End)
-	fmt.Fprintln(stdout, "")
 }
 
 func showOneOfMVC() {
