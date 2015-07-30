@@ -2,7 +2,11 @@ package main
 
 import (
 	"fmt"
+	flags "github.com/jessevdk/go-flags"
 	"github.com/mattn/go-colorable"
+	"math/rand"
+	"os"
+	"time"
 )
 
 const (
@@ -87,7 +91,16 @@ var coreValues []CoreValue = []CoreValue{
 
 }
 
-func main() {
+type Options struct {
+	Random []bool `short:"r" long:"random" description:"Show one of MVC in random"`
+}
+
+func getRandomNum(n int) int {
+	rand.Seed(time.Now().UnixNano())
+	return rand.Intn(n)
+}
+
+func showMission() {
 	fmt.Fprintln(stdout, "")
 	fmt.Fprintln(stdout, Red+"Mission"+End)
 	fmt.Fprintln(stdout, "")
@@ -98,7 +111,9 @@ func main() {
 	// 当たり前のように使うソフトウェアを通じ、人々に新しい体験や価値を
 	// 提供し暮らしをより豊かにする。
 	// そのようなソフトウェアを提供し続ける。
+}
 
+func showVision() {
 	fmt.Fprintln(stdout, "")
 	fmt.Fprintln(stdout, Red+"Vision"+End)
 	fmt.Fprintln(stdout, "")
@@ -111,14 +126,56 @@ func main() {
 	// 技術力だけでなく、社員が持つ熱意や魅力・能力などの総合的な人間力を発揮し、
 	// ソフトウェアを通じ革新的な解決策を提供し続ける。
 	// そのようなイノベーションソフト企業になる。
+}
 
+func showCoreValue(index int, use_title bool) {
 	fmt.Fprintln(stdout, "")
-	fmt.Fprintln(stdout, Red+"Core Value"+End)
-	fmt.Fprintln(stdout, "")
-
-	for i := 0; i < len(coreValues); i++ {
-		fmt.Fprintln(stdout, Green+coreValues[i].title+End)
-		fmt.Fprintln(stdout, Yellow+coreValues[i].what+End)
+	if use_title {
+		fmt.Fprintln(stdout, Red+"Core Value"+End)
 		fmt.Fprintln(stdout, "")
 	}
+	fmt.Fprintln(stdout, Green+coreValues[index].title+End)
+	fmt.Fprintln(stdout, Yellow+coreValues[index].what+End)
+	fmt.Fprintln(stdout, "")
+}
+
+func showOneOfMVC() {
+	index := getRandomNum(len(coreValues) + 2)
+	switch index {
+	default:
+		showCoreValue(index, true)
+	case len(coreValues):
+		showMission()
+	case len(coreValues) + 1:
+		showVision()
+	}
+}
+
+func showMVCAll() {
+	showMission()
+	showVision()
+	showTitle := true
+	for i := 0; i < len(coreValues); i++ {
+		showCoreValue(i, showTitle)
+		showTitle = false
+	}
+}
+
+func main() {
+	var opts Options
+	parser := flags.NewParser(&opts, flags.Default)
+
+	parser.Name = "acsmvc"
+	parser.Usage = "[OPTIONS]"
+	_, err := parser.Parse()
+	if err != nil {
+		os.Exit(0)
+	}
+
+	if opts.Random != nil && opts.Random[0] {
+		showOneOfMVC()
+	} else {
+		showMVCAll()
+	}
+
 }
