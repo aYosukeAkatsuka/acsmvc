@@ -8,4 +8,8 @@ ACCESSのMVC（Mission Vision CoreValue）をターミナルに出力するプ�
 
 ## usage
 
-`$ acsmvc`
+* `$ acsmvc`
+  * Mission、Vision、CoreValueをすべて出力します。
+
+* `$ acsmvc -r`
+  * ランダムにひとつだけ出力します。
