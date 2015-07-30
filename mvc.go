@@ -2,7 +2,9 @@ package main
 
 import (
 	"fmt"
+	flags "github.com/jessevdk/go-flags"
 	"github.com/mattn/go-colorable"
+	"os"
 )
 
 const (
@@ -87,7 +89,29 @@ var coreValues []CoreValue = []CoreValue{
 
 }
 
+type Options struct {
+	Random []bool `short:"r" long:"random" description:"Show one of MVC in random"`
+}
+
 func main() {
+	var opts Options
+	parser := flags.NewParser(&opts, flags.Default)
+
+	parser.Name = "acsmvc"
+	parser.Usage = "[OPTIONS]"
+	_, err := parser.Parse()
+	if err != nil {
+		os.Exit(0)
+	}
+
+	if opts.Random != nil && opts.Random[0] {
+		fmt.Println("random mode")
+		os.Exit(0)
+	} else {
+		fmt.Println("all mode")
+		os.Exit(0)
+	}
+
 	fmt.Fprintln(stdout, "")
 	fmt.Fprintln(stdout, Red+"Mission"+End)
 	fmt.Fprintln(stdout, "")
